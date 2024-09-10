@@ -4,12 +4,6 @@
 
 **Scapof** is a network packet crafting and spoofing tool built using Scapy. It provides users with a simple CLI to create and manipulate ARP packets for network testing and spoofing purposes. The tool is designed to be versatile and user-friendly, allowing you to test network security and troubleshoot network issues effectively.
 
-## Key Features
-
-- **ARP Packet Crafting:** Build and customize ARP request and reply packets with specified source and destination MAC and IP addresses.
-- **Command-Line Interface (CLI):** Easy-to-use CLI for generating ARP packets and performing spoofing operations.
-- **Validation:** Includes validation for MAC addresses, IP addresses, and ARP operation types to ensure correct packet construction.
-
 ## Installation
 
 To install Scapof and its dependencies, follow these steps:
