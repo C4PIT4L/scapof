@@ -4,8 +4,8 @@ from src.spoofing_engine import SpoofingEngine
 
 def banner():
     print(r"""
-                                                  
-                                                  
+
+
                   ~!               :?             
                   ~GY!:.^~~~~~^:.^?GY             
                :^^~5GG5Y55YYYY5YYPGP^             
@@ -26,7 +26,7 @@ def banner():
                   ::..:..~^:~^:.:: !?.            
                   7J!J!^!?Y^Y~J7?77?!             
                   .:..:.::::7::.::.:.             
-                                                  
+
 
     """)
 
@@ -49,6 +49,9 @@ def parse_args():
     parser.add_argument(
         "--op", type=int, choices=[1, 2], default=1, help="ARP Operation type: 1 for request, 2 for reply (default: 1)"
     )
+    parser.add_argument(
+        "--con", action="store_true", help="Send ARP replies indefinitely"
+    )
 
     return parser.parse_args()
 
@@ -65,23 +68,37 @@ def main():
     print(f"Source IP: {args.src_ip}")
     print(f"Destination IP: {args.dst_ip}")
     print(f"ARP Operation: {'Request' if args.op == 1 else 'Reply'}")
+    print(f"Continuous Sending: {'Enabled' if args.con else 'Disabled'}")
 
-    # Initialize the Spoofing Engine and send the ARP spoofing packet
+    # Initialize the Spoofing Engine
     engine = SpoofingEngine()
 
     try:
-        # Send ARP spoof packet based on user inputs
-        engine.send_arp_spoof(
-            src_mac=args.src_mac,
-            dst_mac=args.dst_mac,
-            src_ip=args.src_ip,
-            dst_ip=args.dst_ip,
-            op=args.op
-        )
-        print("ARP packet successfully sent.")
+        if args.con:
+            while True:
+                engine.send_arp_spoof(
+                    src_mac=args.src_mac,
+                    dst_mac=args.dst_mac,
+                    src_ip=args.src_ip,
+                    dst_ip=args.dst_ip,
+                    op=args.op
+                )
+
+        else:
+            # Send a single ARP spoof packet
+            engine.send_arp_spoof(
+                src_mac=args.src_mac,
+                dst_mac=args.dst_mac,
+                src_ip=args.src_ip,
+                dst_ip=args.dst_ip,
+                op=args.op
+            )
+            print("ARP packet successfully sent.")
 
     except ValueError as e:
         print(f"Error: {e}")
+    except KeyboardInterrupt:
+        print("\nTerminated by user.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
