@@ -11,7 +11,7 @@ To install Scapof and its dependencies, follow these steps:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/scapof.git
+    git clone https://github.com/C4PIT4L/scapof.git
     cd scapof
     ```
 
