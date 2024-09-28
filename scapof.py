@@ -3,8 +3,6 @@ from src.spoofing_engine import SpoofingEngine
 
 def banner():
     print(r"""
-
-
                   ~!               :?             
                   ~GY!:.^~~~~~^:.^?GY             
                :^^~5GG5Y55YYYY5YYPGP^             
@@ -25,7 +23,6 @@ def banner():
                   ::..:..~^:~^:.:: !?.            
                   7J!J!^!?Y^Y~J7?77?!             
                   .:..:.::::7::.::.:.             
-
 
     """)
 
@@ -51,6 +48,9 @@ def parse_args():
     parser.add_argument(
         "--con", action="store_true", help="Send ARP replies indefinitely"
     )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Preview the ARP packet without sending it"
+    )
 
     return parser.parse_args()
 
@@ -61,6 +61,11 @@ def main():
     # Parse command-line arguments
     args = parse_args()
 
+    # Check for invalid flag combinations
+    if args.dry_run and args.con:
+        print("Error: --dry-run and --con cannot be used together.")
+        return
+
     # Print the user's inputs for confirmation
     print(f"Source MAC: {args.src_mac}")
     print(f"Destination MAC: {args.dst_mac}")
@@ -68,12 +73,25 @@ def main():
     print(f"Destination IP: {args.dst_ip}")
     print(f"ARP Operation: {'Request' if args.op == 1 else 'Reply'}")
     print(f"Continuous Sending: {'Enabled' if args.con else 'Disabled'}")
+    print(f"Dry-Run Mode: {'Enabled' if args.dry_run else 'Disabled'}")
 
     # Initialize the Spoofing Engine
     engine = SpoofingEngine()
 
     try:
-        if args.con:
+        if args.dry_run:
+            # Dry-run mode: Preview the ARP packet without sending it
+            print("Dry-run mode enabled. Previewing ARP packet...")
+            arp_packet = engine.build_preview(
+                src_mac=args.src_mac,
+                dst_mac=args.dst_mac,
+                src_ip=args.src_ip,
+                dst_ip=args.dst_ip,
+                op=args.op
+            )
+            print(arp_packet.summary())
+        elif args.con:
+            # Continuous ARP spoofing
             while True:
                 engine.send_arp_spoof(
                     src_mac=args.src_mac,
@@ -82,9 +100,8 @@ def main():
                     dst_ip=args.dst_ip,
                     op=args.op
                 )
-
         else:
-            # Send a single ARP spoof packet
+            # Single ARP spoof packet
             engine.send_arp_spoof(
                 src_mac=args.src_mac,
                 dst_mac=args.dst_mac,
