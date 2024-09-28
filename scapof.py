@@ -1,6 +1,6 @@
 import argparse
 from src.spoofing_engine import SpoofingEngine
-import time
+import random
 
 def banner():
     print(r"""
