@@ -52,6 +52,8 @@ def parse_args():
         "--dry-run", action="store_true", help="Preview the ARP packet without sending it"
     )
 
+
+
     return parser.parse_args()
 
 
@@ -65,6 +67,7 @@ def main():
     if args.dry_run and args.con:
         print("Error: --dry-run and --con cannot be used together.")
         return
+
 
     # Print the user's inputs for confirmation
     print(f"Source MAC: {args.src_mac}")

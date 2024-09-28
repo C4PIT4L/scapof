@@ -20,6 +20,7 @@ class SpoofingEngine:
         except ValueError as e:
             print(f"Error: {e}")
 
+
     def build_preview(self, src_mac, dst_mac, src_ip, dst_ip, op=1):
         # Build ARP packet without sending it (for dry-run)
         try:
@@ -34,3 +35,5 @@ class SpoofingEngine:
         except ValueError as e:
             print(f"Error: {e}")
             return None
+
+
